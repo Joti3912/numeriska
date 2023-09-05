@@ -30,6 +30,16 @@ def dp2(theta1, theta2, p1, p2):
     dtheta1 = dtheta1(theta1, theta2, p1, p2)
     dtheta2 = dtheta2(theta1, theta2, p1, p2)
     negml2 = (-(1/2))*ml2
-    return negml2*(-dtheta1*dtheta2*np.sin(theta1 - theta2) + 3*(g/l)*np.sin(theta2))
+    return negml2*(-dtheta1*dtheta2*np.sin(theta1 - theta2) + (g/l)*np.sin(theta2))
 
-#skriv delta 
+def f(t, y):
+    theta1, theta2, p1, p2 = y
+    dtheta1_dt = dtheta1(theta1, theta2, p1, p2)
+    dtheta2_dt = dtheta2(theta1, theta2, p1, p2)
+    dp1_dt = dp1(theta1, theta2, p1, p2)
+    dp2_dt = dp2(theta1, theta2, p1, p2)
+    return [dtheta1_dt, dtheta2_dt, dp1_dt, dp2_dt]
+
+    
+result = solve_ivp(f, (0,10), (np.pi/10, np.pi/10, 0, 0))
+print(result)
