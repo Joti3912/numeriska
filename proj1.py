@@ -60,12 +60,12 @@ plt.legend()
 
 #Beräknar y för varje steg dt inom tspan med eulers metod på funktion f(t,y).
 def euler(f, tspan, y0, dt):
-    steps = round((tspan)/dt)            #antalet tidpunkter
-    tvec = np.linspace(0, tspan, steps)   #array med alla tidpunkter
-    y = np.zeros((len(tvec),len(y0)))   #tidpunkter x variabler
+    steps = round((tspan)/dt)               #antalet tidpunkter
+    tvec = np.linspace(0, tspan, steps)     #array med alla tidpunkter
+    y = np.zeros((len(tvec),len(y0)))       #tidpunkter x variabler
     i = 0
-    y[i, :] = y0                        #set start values   
-    for t in range(len(tvec)-1):
+    y[i, :] = y0                            #set start values   
+    for t in range(len(tvec)-1):            #obs: ODE:n beror ej av t så vi kan använda range
         y[i+1,:] = y[i,:]+dt*f(t,y[i,:])
         i += 1
     return tvec , y
@@ -83,9 +83,9 @@ plt.show()
 
 #Beräknar y för varje steg dt inom tspan med klassisk runge-kutta (4-steg) på funktionen f(t,y).
 def runge_kutta(f, tspan, y0, dt):
-    steps = round((tspan)/dt)            #antalet tidpunkter
-    tvec = np.linspace(0, tspan, steps)   #array med alla tidpunkter
-    y = np.zeros((len(tvec),len(y0)))   #tidpunkter x variabler
+    steps = round((tspan)/dt)               #antalet tidpunkter
+    tvec = np.linspace(0, tspan, steps)     #array med alla tidpunkter
+    y = np.zeros((len(tvec),len(y0)))       #tidpunkter x variabler
     i = 0
     y[i, :] = y0  
     for t in range(len(tvec)-1):
