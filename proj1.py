@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
+import matplotlib.animation as anim
 
 h_ivp = 0.05
 h_euler = 0.0001
@@ -110,4 +111,25 @@ plt.ylabel('theta')
 plt.legend()
 plt.show()
 
+# Omvandlar vinklar till x,y koordinater för respektive pendel (längd från global variabel l) 
+def theta_to_xy(theta1, theta2, l):
+    return  (l*np.sin(theta1),
+            -l*np.cos(theta1),
+            l*np.sin(theta1) + l*np.sin(theta2),
+            -l*np.cos(theta1) - l*np.cos(theta2))
 
+x1, y1, x2, y2 = theta_to_xy(y_runge[:, 0], y_runge[:, 1], l)
+
+def animate(i):
+    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  
+
+plt.figure("Figure 4, animated double pendulum with runge-kutta method")
+fig, ax = plt.subplots(1,1, figsize=(8,8))
+ax.set_facecolor('k')
+ax.get_xaxis().set_ticks([])
+ax.get_yaxis().set_ticks([])
+ln1, = plt.plot([],[], 'ro--', lw=3, markersize=8)
+ax.set_ylim(-4,4)
+ax.set_xlim(-4,4)
+ani = anim.FuncAnimation(fig, animate,frames=500,interval=50)
+ani.save('dubpen.gif', writer='pillow', fps = 100)
