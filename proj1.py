@@ -3,17 +3,13 @@ from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 import matplotlib.animation as anim
 
-h_ivp = 0.05
-h_euler = 0.0001
+h_ivp = 0.01
+h_euler = 0.001
 h_runge = 0.01
 m = 1
 l = 1 
 g = 9.81
 ml2 = m*l*l
-#theta1 = np.pi/10
-#theta2 = np.pi/10
-#p1 = 0
-#p2 = 0
 
 #vinkelhastighet theta1 (övre pendel)
 def dtheta1(theta1, theta2, p1, p2):
@@ -58,6 +54,7 @@ plt.plot(result1.t, result1.y[1], label="theta2(t)")
 plt.xlabel('t')
 plt.ylabel('theta')
 plt.legend()
+plt.show()
 
 #Beräknar y för varje steg dt inom tspan med eulers metod på funktion f(t,y).
 def euler(f, tspan, y0, dt):
@@ -89,9 +86,9 @@ def runge_kutta(f, tspan, y0, dt):
     y = np.zeros((len(tvec),len(y0)))       #tidpunkter x variabler
     i = 0
     y[i, :] = y0  
+    h2 = dt/2
+    h6 = dt/6
     for t in range(len(tvec)-1):
-        h2 = dt/2
-        h6 = dt/6
         k1 = f(t,y[i,:])
         k2 = f(t + h2, y[i,:]+h2*k1)
         k3 = f(t+h2,y[i,:]+h2*k2)
@@ -100,8 +97,8 @@ def runge_kutta(f, tspan, y0, dt):
         i+=1
     return tvec,y
 
-
-t_runge, y_runge = runge_kutta(ode, 10, [np.pi/10, np.pi/10, 0, 0], h_runge)
+ 
+t_runge, y_runge = runge_kutta(ode, 20, [np.pi/2.2, np.pi/2.2, 0, 0], h_runge)
 plt.figure("Figure 3: Runge-kutta method, h = {}" .format(h_runge))
 plt.title("Runge-kutta, h = {}" .format(h_runge))
 plt.plot(t_runge, y_runge[:,0], label="theta1(t)")
@@ -121,15 +118,16 @@ def theta_to_xy(theta1, theta2, l):
 x1, y1, x2, y2 = theta_to_xy(y_runge[:, 0], y_runge[:, 1], l)
 
 def animate(i):
-    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  
+    ln1.set_data([0, x1[2*i], x2[2*i]], [0, y1[2*i], y2[2*i]])  
 
 plt.figure("Figure 4, animated double pendulum with runge-kutta method")
-fig, ax = plt.subplots(1,1, figsize=(8,8))
-ax.set_facecolor('k')
+fig, ax = plt.subplots(1,1, figsize=(5,5))
+ax.set_facecolor('w')
 ax.get_xaxis().set_ticks([])
 ax.get_yaxis().set_ticks([])
 ln1, = plt.plot([],[], 'ro--', lw=3, markersize=8)
-ax.set_ylim(-4,4)
-ax.set_xlim(-4,4)
-ani = anim.FuncAnimation(fig, animate,frames=500,interval=50)
-ani.save('dubpen.gif', writer='pillow', fps = 100)
+ax.set_ylim(-3,3)
+ax.set_xlim(-3,3)
+plt.title("theta1, theta2, p1, p2 = pi/2.2, pi/2.2, 0, 0")
+ani = anim.FuncAnimation(fig, animate, frames=round(len(t_runge)/2), interval=1)
+ani.save('dubpen.gif', writer='pillow', fps=(50))
